@@ -18,7 +18,7 @@ namespace wnd {
          * @return T* The pointer to the casted event.
          */
         template <std::derived_from<IEvent> T>
-        inline T* downCast() noexcept {
+        [[nodiscard]] inline T* downCast() noexcept {
             return dynamic_cast<T*>(this);
         }
 
@@ -27,7 +27,7 @@ namespace wnd {
          * 
          * @return constexpr const char* The event name.
          */
-        virtual constexpr const char* getName() const noexcept = 0;
+        [[nodiscard]] virtual constexpr const char* getName() const noexcept = 0;
     };
 
     /**

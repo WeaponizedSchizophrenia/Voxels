@@ -10,9 +10,9 @@ namespace x11 {
      */
     class EventTranslator : public wnd::IEventTranslator<XEvent> {
     public:
-        EventTranslator() noexcept : m_deleteWindowProtocol(XInternAtom(XOpenDisplay(nullptr), "WM_DELETE_WINDOW", false)) { }
+        [[nodiscard]] EventTranslator() noexcept : m_deleteWindowProtocol(XInternAtom(XOpenDisplay(nullptr), "WM_DELETE_WINDOW", false)) { }
 
-        std::unique_ptr<wnd::IEvent> translateEvent(const XEvent& event) const noexcept override;
+        [[nodiscard]] std::unique_ptr<wnd::IEvent> translateEvent(const XEvent& event) const noexcept override;
 
     private:
         Atom m_deleteWindowProtocol; //< Atom for the WM_DELETE_WINDOW protocol.

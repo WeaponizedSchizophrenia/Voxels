@@ -22,7 +22,7 @@ namespace wnd {
          * @param width The window width.
          * @param height The window height.
          */
-        explicit WindowBuilder(std::string&& title = DEFAULT_WINDOW_TITLE, uint32 width = DEFAULT_WINDOW_WIDTH, uint32 height = DEFAULT_WINDOW_HEIGHT) noexcept
+        [[nodiscard]] explicit WindowBuilder(std::string&& title = DEFAULT_WINDOW_TITLE, uint32 width = DEFAULT_WINDOW_WIDTH, uint32 height = DEFAULT_WINDOW_HEIGHT) noexcept
             : m_title(std::move(title))
             , m_width(width), m_height(height) {  }
 
@@ -54,7 +54,7 @@ namespace wnd {
          * 
          * @return std::unique_ptr<IWindow> A pointer to the window.
          */
-        std::unique_ptr<IWindow> build() const;
+        [[nodiscard]] std::unique_ptr<IWindow> build() const;
 
     private:
         uint32 m_width, m_height; //< Window dimensions.

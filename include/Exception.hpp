@@ -15,10 +15,10 @@ namespace voxels {
      */
     class Exception : public std::exception {
     public:
-        explicit Exception(uint32 line, std::string&& file, std::string&& message) noexcept
+        [[nodiscard]] explicit Exception(uint32 line, std::string&& file, std::string&& message) noexcept
             : m_line(line), m_file(std::move(file)), m_message(std::move(message)) {  }
 
-        virtual const char* what() const noexcept override final {
+        [[nodiscard]] virtual const char* what() const noexcept override final {
             // If the message has not been formated yet, format it.
             if(!m_formatedMessage) {
                 m_formatedMessage = formatMessage();
@@ -34,7 +34,7 @@ namespace voxels {
          *
          * @note Derrived classes should override this function to format their custom message.
          */
-        virtual std::string formatMessage() const noexcept {
+        [[nodiscard]] inline virtual std::string formatMessage() const noexcept {
             std::stringstream sstream;
             sstream << m_file << ":" << m_line << " Exception: " << m_message;
             return sstream.str();

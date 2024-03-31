@@ -10,16 +10,16 @@ namespace wnd {
      */
     class MouseMotionEvent : public IEvent {
     public:
-        virtual constexpr const char* getName() const noexcept override { return "MouseMotionEvent"; }
+        [[nodiscard]] virtual constexpr const char* getName() const noexcept override { return "MouseMotionEvent"; }
 
-        explicit MouseMotionEvent(int32 x, int32 y) noexcept : m_x(x), m_y(y) {}
+        [[nodiscard]] explicit MouseMotionEvent(int32 x, int32 y) noexcept : m_x(x), m_y(y) {}
 
         /// @brief Returns the new x coordinate of the cursor.
-        inline int32 getX() const noexcept { return m_x; }
+        [[nodiscard]] inline int32 getX() const noexcept { return m_x; }
         /// @brief Returns the new y coordinate of the cursor.
-        inline int32 getY() const noexcept { return m_y; }
+        [[nodiscard]] inline int32 getY() const noexcept { return m_y; }
         /// @brief Returns the new position of the cursor.
-        inline std::pair<int32, int32> getPos() const noexcept { return { m_x, m_y }; }
+        [[nodiscard]] inline std::pair<int32, int32> getPos() const noexcept { return { m_x, m_y }; }
     
     private:
         const int32 m_x, m_y; //< The new position of the cursor.

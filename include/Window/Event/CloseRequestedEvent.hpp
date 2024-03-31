@@ -8,6 +8,6 @@ namespace wnd {
      */
     class CloseRequestedEvent : public IEvent {
     public:
-        virtual constexpr const char* getName() const noexcept override { return "CloseRequestedEvent"; }  
+        [[nodiscard]] virtual constexpr const char* getName() const noexcept override { return "CloseRequestedEvent"; }  
     };
 }

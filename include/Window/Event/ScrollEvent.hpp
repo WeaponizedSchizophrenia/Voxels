@@ -9,16 +9,16 @@ namespace wnd {
      */
     class ScrollEvent : public IEvent {
     public:
-        virtual constexpr const char* getName() const noexcept override { return "ScrollEvent"; }
+        [[nodiscard]] virtual constexpr const char* getName() const noexcept override { return "ScrollEvent"; }
 
-        explicit ScrollEvent(int8 delta) noexcept : m_delta(delta) {}
+        [[nodiscard]] explicit ScrollEvent(int8 delta) noexcept : m_delta(delta) {}
 
         /// @brief Returns the scroll delta, a positive delta means that the user scrolled up.
-        inline int8 getDelta() const noexcept { return m_delta; }
+        [[nodiscard]] inline int8 getDelta() const noexcept { return m_delta; }
         /// @brief Returns true if the user scrolled up.
-        inline bool isUp() const noexcept { return m_delta > 0; }
+        [[nodiscard]] inline bool isUp() const noexcept { return m_delta > 0; }
         /// @brief Returns true if the user scrolled down.
-        inline bool isDown() const noexcept { return m_delta < 0; }
+        [[nodiscard]] inline bool isDown() const noexcept { return m_delta < 0; }
 
     private:
         int8 m_delta; //< The scroll delta.

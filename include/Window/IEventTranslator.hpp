@@ -19,6 +19,6 @@ namespace wnd {
          * @param event The native event.
          * @return std::unique_ptr<IEvent> The generic IEvent.
          */
-        virtual std::unique_ptr<IEvent> translateEvent(const T& event) const noexcept = 0;
+        [[nodiscard]] virtual std::unique_ptr<IEvent> translateEvent(const T& event) const noexcept = 0;
     };
 }

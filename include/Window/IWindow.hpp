@@ -34,7 +34,7 @@ namespace wnd {
          * @return true If the window is not minimized.
          * @return false If the window is minimized.
          */
-        virtual bool getVisibility() const noexcept = 0;
+        [[nodiscard]] virtual bool getVisibility() const noexcept = 0;
         /**
          * @brief Runs the window loop.
          * 

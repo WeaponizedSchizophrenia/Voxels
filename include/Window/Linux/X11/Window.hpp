@@ -14,7 +14,7 @@ namespace x11 {
      */
     class Window : public wnd::IWindow {
     public:
-        explicit Window(std::string_view title, uint32 width, uint32 height, 
+        [[nodiscard]] explicit Window(std::string_view title, uint32 width, uint32 height, 
             std::unique_ptr<wnd::IEventTranslator<XEvent>>&& eventTranslator);
         virtual ~Window() override;
 
@@ -30,7 +30,7 @@ namespace x11 {
             m_visible = visible;
             updateVisibility();
         }
-        virtual inline bool getVisibility() const noexcept override { return m_visible; }
+        [[nodiscard]] virtual inline bool getVisibility() const noexcept override { return m_visible; }
         virtual inline void close() noexcept override { m_open = false; }
 
     private:

@@ -10,7 +10,7 @@ namespace wnd {
      */
     class MouseButtonEvent : public IEvent {
     public:
-        virtual constexpr const char* getName() const noexcept override { return "MouseButtonEvent"; }
+        [[nodiscard]] virtual constexpr const char* getName() const noexcept override { return "MouseButtonEvent"; }
 
         /**
          * @brief Mouse button enum.
@@ -23,13 +23,13 @@ namespace wnd {
             : m_button(button), m_state(state) {}
 
         /// @brief Returns the button that caused the event.
-        inline Button getButton() const noexcept { return m_button; }
+        [[nodiscard]] inline Button getButton() const noexcept { return m_button; }
         /// @brief Returns the state of the button.
-        inline ButtonState getState() const noexcept { return m_state; }
+        [[nodiscard]] inline ButtonState getState() const noexcept { return m_state; }
         /// @brief Returns true if the button is pressed.
-        inline bool isPressed() const noexcept { return m_state == ButtonState::Pressed; }
+        [[nodiscard]] inline bool isPressed() const noexcept { return m_state == ButtonState::Pressed; }
         /// @brief Returns true if the button is released.
-        inline bool isReleased() const noexcept { return m_state == ButtonState::Released; }
+        [[nodiscard]] inline bool isReleased() const noexcept { return m_state == ButtonState::Released; }
 
     private:
         const Button m_button; //< The button that caused the event.
