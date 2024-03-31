@@ -6,7 +6,7 @@
 
 // NOTE: The following code **SHOULD BE** memory safe however I have not tested it extensively.
 
-namespace event {
+namespace voxels {
     template<typename... T>
     class Emitter;
 
