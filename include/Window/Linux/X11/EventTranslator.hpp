@@ -1,4 +1,5 @@
 #pragma once
+#ifdef __linux__
 
 #include "Window/IEventTranslator.hpp"
 #include <X11/Xlib.h>
@@ -17,3 +18,4 @@ namespace x11 {
         Atom m_deleteWindowProtocol; //< Atom for the WM_DELETE_WINDOW protocol.
     };
 }
+#endif

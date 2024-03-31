@@ -1,4 +1,5 @@
 #pragma once
+#if __linux__
 
 #include "Global.hpp"
 #include "Window/IEventTranslator.hpp"
@@ -46,3 +47,5 @@ namespace x11 {
         std::unique_ptr<wnd::IEventTranslator<XEvent>> m_eventTranslator; //< Generic event translator.
     };
 }
+
+#endif
