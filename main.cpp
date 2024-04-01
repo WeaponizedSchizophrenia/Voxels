@@ -1,4 +1,3 @@
-#include "Exception.hpp"
 #include "Renderer/Vulkan/Renderer.hpp"
 #include "Window/Event/CloseRequestedEvent.hpp"
 #include "Window/Event/IEvent.hpp"
@@ -17,7 +16,9 @@ int main() {
     /* TEMPORARY FOR TESTING */
     try {
         auto vRenderer = vulkan::Renderer("Voxels");
-    } catch (const voxels::Exception& e) {
+
+        std::cout << "Renderer did't throw an exception.\n";
+    } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
     }
 

@@ -11,15 +11,17 @@
 
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <vulkan/vk_platform.h>
 #include <vulkan/vulkan_core.h>
 #include <vulkan/vulkan_funcs.hpp>
 #include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan_raii.hpp>
 
 // If it is a debug build than enable validation layers.
 #ifndef NDEBUG
-static constexpr const char* const VALIDATION_LAYERS[] = {
+static constexpr const char* const LAYERS[] = {
     "VK_LAYER_KHRONOS_validation",
 };
 
@@ -48,7 +50,7 @@ static const char* areValidationLayersSupported() {
     }
 
     // Enumerate through the VALIDATION_LAYERS and check if every single one is supported if not then return which is not.
-    for(auto validationLayer : VALIDATION_LAYERS) {
+    for(auto validationLayer : LAYERS) {
         auto foundLayer = false;
 
         for (const auto& supportedLayer: supportedValidationLayers) {
@@ -77,8 +79,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
     VkDebugUtilsMessageTypeFlagsEXT messageType, 
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
-    void* pUserData) 
-{
+    void* pUserData
+) {
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
@@ -97,83 +99,123 @@ vk::DispatchLoaderDynamic getDynamicDispatchLoader(vk::Instance instance) {
 
 #endif
 
-vulkan::Renderer::Renderer(std::string_view applicationName, uint32 majorVersion, uint32 minorVersion, uint32 patchVersion) {
-    // Getting the Vulkan instance.
-    vk::ApplicationInfo appInfo {
-        applicationName.data(),
-        VK_MAKE_VERSION(majorVersion, minorVersion, patchVersion),
-        ENGINE_NAME,
-        VK_MAKE_VERSION(ENGINE_VERSION_MAJOR, ENGINE_VERSION_MINOR, ENGINE_VERSION_PATCH),
-        VK_API_VERSION_1_3,
-        nullptr
-    };
-    vk::InstanceCreateInfo instanceInfo {
-        {},
-        &appInfo,
-    };
+vulkan::Renderer::Renderer(std::string_view applicationName, uint32 majorVersion, uint32 minorVersion, uint32 patchVersion)
+    : m_context()
+    , m_instance([&, this] {
+        vk::ApplicationInfo appInfo {
+            applicationName.data(),
+            VK_MAKE_VERSION(majorVersion, minorVersion, patchVersion),
+            ENGINE_NAME,
+            VK_MAKE_VERSION(ENGINE_VERSION_MAJOR, ENGINE_VERSION_MINOR, ENGINE_VERSION_PATCH),
+            VK_API_VERSION_1_0,
+        };
+        vk::InstanceCreateInfo instanceInfo {
+            {},
+            &appInfo
+        };
 
-    // If it is a debug build then set the validation layers.
+        // If it is a debug build then set the validation layers.
+        #ifndef NDEBUG
+
+        const char* validationLayer = areValidationLayersSupported();
+        // If there is a validation layer that is not supported then throw an exception.
+        if(validationLayer) {
+            std::stringstream sstream;
+            sstream << validationLayer << " is not supported.";
+            THROW_EXCEPTION(std::move(sstream.str()));
+        }
+
+        // Set the instance layers.
+        instanceInfo.setEnabledLayerCount(std::size(LAYERS));
+        instanceInfo.setPEnabledLayerNames(LAYERS);
+
+        // Enable the instance extensions.
+        instanceInfo.setEnabledExtensionCount(std::size(EXTENSIONS));
+        instanceInfo.setPEnabledExtensionNames(EXTENSIONS);
+
+        #endif
+
+        return m_context.createInstance(instanceInfo);
+    }())
     #ifndef NDEBUG
-
-    const char* validationLayer = areValidationLayersSupported();
-    // If there is a validation layer that is not supported then throw an exception.
-    if(validationLayer) {
-        std::stringstream sstream;
-        sstream << validationLayer << " is not supported.";
-        THROW_EXCEPTION(std::move(sstream.str()));
-    }
-
-    // Set the instance layers.
-    instanceInfo.setEnabledLayerCount(std::size(VALIDATION_LAYERS));
-    instanceInfo.setPEnabledLayerNames(VALIDATION_LAYERS);
-
-    // Enable the instance extensions.
-    instanceInfo.setEnabledExtensionCount(std::size(EXTENSIONS));
-    instanceInfo.setPEnabledExtensionNames(EXTENSIONS);
-
+    , m_debugMessenger([this] {
+        vk::DebugUtilsMessengerCreateInfoEXT debugInfo = {
+            {},
+            vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose
+                | vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo
+                | vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning
+                | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
+            vk::DebugUtilsMessageTypeFlagBitsEXT::eDeviceAddressBinding
+                | vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral
+                | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance
+                | vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
+            debugCallback,
+            nullptr,
+            nullptr
+        };
+        return m_instance.createDebugUtilsMessengerEXT(debugInfo);
+    }())
     #endif
+    , m_physicalDevice([this] {
+        // Get all the physical devices.
+        auto physicalDevices = vk::raii::PhysicalDevices(m_instance);
+        // Throw if there are no devices that support Vulkan.
+        if(physicalDevices.empty()) {
+            THROW_EXCEPTION("Could not find any GPU that support Vulkan");
+        }
+        // For now just get the first available device.
+        // In the future might implement an actual physical device selection.
+        return physicalDevices.front();
+    }())
+    , m_device([this] {
+        auto queueFamilyProperties = m_physicalDevice.getQueueFamilyProperties();
 
-    auto instanceResult = vk::createInstance(&instanceInfo, nullptr, &m_instance);
-    if(instanceResult != vk::Result::eSuccess) {
-        THROW_VULKAN_EXCEPTION("Failed to create Vulkan instance", instanceResult);
-    }
+        std::optional<uint32> graphicsQueueIndex = {  };
+        for(uint32 i = 0; const auto& queueFamily : queueFamilyProperties) {
+            if(queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) {
+                graphicsQueueIndex = i;
+                break;
+            }
+            ++i;
+        }
 
-    // If it is in debug mode enable the debug messenger.
-    #ifndef NDEBUG
+        if(!graphicsQueueIndex) {
+            THROW_EXCEPTION("Could not find a queue family that supports graphics");
+        }
+        
+        constexpr const float QUEUE_PRIORITIES[] = { 1.0f };
 
-    // Create the descriptor.
-    vk::DebugUtilsMessengerCreateInfoEXT debugInfo = {
-        {},
-        vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose
-            | vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo
-            | vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning
-            | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
-        vk::DebugUtilsMessageTypeFlagBitsEXT::eDeviceAddressBinding
-            | vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral
-            | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance
-            | vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
-        debugCallback,
-        nullptr,
-        nullptr
-    };
+        vk::DeviceQueueCreateInfo queueCreateInfos[] = {
+            {
+                {},
+                *graphicsQueueIndex,
+                1,
+                QUEUE_PRIORITIES,
+                nullptr  
+            },
+        };
 
-    // Create the debug messenger.
-    auto debugUtilCreationResult = m_instance.createDebugUtilsMessengerEXT(&debugInfo, nullptr, 
-        &m_debugMessenger, getDynamicDispatchLoader(m_instance));
-    if(debugUtilCreationResult != vk::Result::eSuccess) {
-        THROW_VULKAN_EXCEPTION("Failed to create debug messenger", debugUtilCreationResult);
-    }
+        vk::PhysicalDeviceFeatures deviceFeatures = m_physicalDevice.getFeatures();
 
-    #endif
-}
+        vk::DeviceCreateInfo deviceCreateInfo = {
+            {},
+            std::size(queueCreateInfos),
+            queueCreateInfos,
+            #ifndef NDEBUG
+            std::size(LAYERS),
+            LAYERS,
+            #else
+            // My GPU doesn't support VK_EXT_debug_utils, so this is left empty for now.
+            0,
+            nullptr,
+            #endif
+            0,
+            nullptr,
+            &deviceFeatures,
+        };
 
-vulkan::Renderer::~Renderer() noexcept {
-    // If it is a debug build then destroy the debug messenger.
-    #ifndef NDEBUG
-    m_instance.destroyDebugUtilsMessengerEXT(m_debugMessenger, 
-        nullptr, getDynamicDispatchLoader(m_instance));
-    #endif
+        return m_physicalDevice.createDevice(deviceCreateInfo);
+    }())    
+{  }
 
-    // Destroy the instance.
-    m_instance.destroy();
-}
+vulkan::Renderer::~Renderer() noexcept {  }
