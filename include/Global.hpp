@@ -11,3 +11,8 @@ using uint64 = unsigned long;   //< Unsigned 64-bit integer
 
 using float32 = float;          //< 32-bit floating point
 using float64 = double;         //< 64-bit floating point
+
+static constexpr const char* const ENGINE_NAME = "Voxels"; //< The engine name
+static constexpr uint32 ENGINE_VERSION_MAJOR = 0; //< The engine major version
+static constexpr uint32 ENGINE_VERSION_MINOR = 0; //< The engine minor version
+static constexpr uint32 ENGINE_VERSION_PATCH = 1; //< The engine patch version

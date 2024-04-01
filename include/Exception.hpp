@@ -40,10 +40,11 @@ namespace voxels {
             return sstream.str();
         }
 
+        const uint32 m_line; //< The line where the exception was thrown.
+        const std::string m_file; //< The file where the exception was thrown.
+        const std::string m_message; //< The message associated with the exception.
+        
     private:
-        uint32 m_line; //< The line where the exception was thrown.
-        std::string m_file; //< The file where the exception was thrown.
-        std::string m_message; //< The message associated with the exception.
         mutable std::optional<std::string> m_formatedMessage; //< The formated message.
         // The formated message is mutable so that it could be accessed from the const char* what() function which is marked const.
     };

@@ -1,3 +1,5 @@
+#include "Exception.hpp"
+#include "Renderer/Vulkan/Renderer.hpp"
 #include "Window/Event/CloseRequestedEvent.hpp"
 #include "Window/Event/IEvent.hpp"
 #include "Window/Event/KeyboardEvent.hpp"
@@ -12,6 +14,13 @@
 #include <memory>
 
 int main() {
+    /* TEMPORARY FOR TESTING */
+    try {
+        auto vRenderer = vulkan::Renderer("Voxels");
+    } catch (const voxels::Exception& e) {
+        std::cerr << e.what() << '\n';
+    }
+
     auto window = wnd::WindowBuilder("Voxels")
         .setDimensions(800, 600)
         .build();
