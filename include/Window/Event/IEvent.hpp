@@ -23,6 +23,17 @@ namespace wnd {
         }
 
         /**
+         * @brief Downcasts to the specified event type.
+         * 
+         * @tparam T The event type to cast to. ( Must implement the IEvent interface. )
+         * @return T* The const pointer to the casted event.
+         */
+        template<std::derived_from<IEvent> T>
+        [[nodiscard]] inline const T* downCast() const noexcept {
+            return dynamic_cast<const T*>(this);
+        }
+
+        /**
          * @brief Returns the event name.
          * 
          * @return constexpr const char* The event name.

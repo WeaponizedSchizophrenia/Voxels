@@ -26,8 +26,8 @@ std::unique_ptr<wnd::IEvent> x11::EventTranslator::translateEvent(const XEvent& 
                 // Buttons 8 and 9 are mapped to side buttons.
                 case 8: return std::make_unique<wnd::MouseButtonEvent>(wnd::MouseButtonEvent::Button::Side1, wnd::ButtonState::Pressed);
                 case 9: return std::make_unique<wnd::MouseButtonEvent>(wnd::MouseButtonEvent::Button::Side2, wnd::ButtonState::Pressed);
-                // The rest map to the enum.
-                default: return std::make_unique<wnd::MouseButtonEvent>(static_cast<wnd::MouseButtonEvent::Button>(event.xbutton.button), wnd::ButtonState::Pressed);
+                // The rest map to the enum. ( -1 because the MouseButtonEvent::Button enum is zero indexed )
+                default: return std::make_unique<wnd::MouseButtonEvent>(static_cast<wnd::MouseButtonEvent::Button>(event.xbutton.button - 1), wnd::ButtonState::Pressed);
             }
         }
         case ButtonRelease: {
@@ -38,7 +38,7 @@ std::unique_ptr<wnd::IEvent> x11::EventTranslator::translateEvent(const XEvent& 
                 // The rest is the same as in the ButtonPress case except with a different ButtonState.
                 case 8: return std::make_unique<wnd::MouseButtonEvent>(wnd::MouseButtonEvent::Button::Side1, wnd::ButtonState::Released);
                 case 9: return std::make_unique<wnd::MouseButtonEvent>(wnd::MouseButtonEvent::Button::Side2, wnd::ButtonState::Released);
-                default: return std::make_unique<wnd::MouseButtonEvent>(static_cast<wnd::MouseButtonEvent::Button>(event.xbutton.button), wnd::ButtonState::Released);
+                default: return std::make_unique<wnd::MouseButtonEvent>(static_cast<wnd::MouseButtonEvent::Button>(event.xbutton.button - 1), wnd::ButtonState::Released);
             }
         }
         case MotionNotify: {

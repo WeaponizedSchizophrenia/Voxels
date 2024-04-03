@@ -1,11 +1,11 @@
+#include "Exception.hpp"
 #include "Window/Event/CloseRequestedEvent.hpp"
 #include "Window/Event/IEvent.hpp"
-#include "Window/Event/KeyboardEvent.hpp"
+#include "Window/Event/Key.hpp"
 #include "Window/Event/MouseButtonEvent.hpp"
-#include "Window/Event/MouseMotionEvent.hpp"
-#include "Window/Event/ResizeEvent.hpp"
-#include "Window/Event/ScrollEvent.hpp"
+#include "Window/InputEventParser.hpp"
 #include "Window/IWindow.hpp"
+#include "Window/InputEventParser.hpp"
 #include "Window/WindowBuilder.hpp"
 
 #include <iostream>
@@ -16,34 +16,43 @@ int main() {
         .setDimensions(800, 600)
         .build();
 
+    auto inputParser = wnd::InputEventParser();
+
     /* TEMPORARY FOR TESTING */
     window->runLoop([&](wnd::IEvent* event) {
+
         if(event) {
-            if(auto* mbEvent = event->downCast<wnd::MouseButtonEvent>(); mbEvent) {
-                if(mbEvent->isPressed())
-                    std::cout << mbEvent->getName() << " (pressed) : " << (int)mbEvent->getButton() << '\n';
-                else
-                    std::cout << mbEvent->getName() << " (released) : " << (int)mbEvent->getButton() << '\n';
-            } else if(auto* motionEvent = event->downCast<wnd::MouseMotionEvent>(); motionEvent) {
-                std::cout << motionEvent->getName() << " : " << motionEvent->getX() << ", " << motionEvent->getY() << '\n';
-            } else if(auto* closeEvent = event->downCast<wnd::CloseRequestedEvent>(); closeEvent) {
-                std::cout << closeEvent->getName() << '\n';
+
+            inputParser.parseEvent(*event);
+
+            if(inputParser.isPressed(wnd::Key::Escape)) {
                 window->close();
-            } else if(auto* resizeEvent = event->downCast<wnd::ResizeEvent>(); resizeEvent) {
-                std::cout << resizeEvent->getName() << " : " << resizeEvent->getWidth() << ", " << resizeEvent->getHeight() << '\n';
-            } else if(auto* keyEvent = event->downCast<wnd::KeyboardEvent>(); keyEvent) {
-                if(keyEvent->isPressed())
-                    std::cout << keyEvent->getName() << " (pressed) : 0x" << std::hex << (int)keyEvent->getKey() << std::dec << '\n';
-                else
-                    std::cout << keyEvent->getName() << " (released) : 0x" << std::hex << (int)keyEvent->getKey() << std::dec << '\n';
-                if(keyEvent->isPressed() && keyEvent->getKey() == wnd::Key::Escape)
-                    window->close();
-                if(keyEvent->isPressed() && keyEvent->getKey() == wnd::Key::Space)
-                    window->setVisibility(false);
-            } else if(auto* scrollEvent = event->downCast<wnd::ScrollEvent>(); scrollEvent) {
-                std::cout << scrollEvent->getName() << " : " << static_cast<int32>(scrollEvent->getDelta()) << '\n';
             }
-        }
+            if(inputParser.isPressed(wnd::Key::LeftControl)) {
+                std::cout << "pressed ctrl\n";
+            }
+            if(inputParser.isReleased(wnd::Key::LeftControl)) {
+                std::cout << "released ctrl\n";
+            }
+            if(inputParser.isPressed(wnd::Key::Space)) {
+                std::cout << "pressed space\n";
+            }
+            if(inputParser.isReleased(wnd::Key::Space)) {
+                std::cout << "released space\n";
+            }
+            if(inputParser.isPressed(wnd::MouseButtonEvent::Button::Side1)
+                && inputParser.getModifierState().m_leftCtrl) {
+                std::cout << "Side1 + lCtrl\n";
+            }
+
+            if(auto* closeRequested = event->downCast<wnd::CloseRequestedEvent>(); closeRequested) {
+                window->close();
+            }
+
+        } 
+
+        inputParser.onLoopEnded();
+
     });
 
     return 0;

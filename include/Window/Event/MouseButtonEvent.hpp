@@ -16,7 +16,7 @@ namespace wnd {
          * @brief Mouse button enum.
          */
         enum class Button : uint8 {
-            Left = 1, Middle = 2, Right = 3, Side1 = 4, Side2 = 5
+            Left = 0, Middle = 1, Right = 2, Side1 = 3, Side2 = 4
         };
 
         explicit MouseButtonEvent(Button button, ButtonState state) noexcept 
