@@ -1,5 +1,8 @@
 #pragma once
-#ifdef __linux__
+
+#include "Global.hpp"
+
+#ifdef WINDOW_API_X11
 
 #include "Window/IEventTranslator.hpp"
 #include <X11/Xlib.h>

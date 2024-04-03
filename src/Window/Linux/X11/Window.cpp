@@ -9,6 +9,8 @@
 #include <X11/Xutil.h> // X11 utility
 #include <chrono> // Required for the delta time calculations
 
+#ifdef WINDOW_API_X11
+
 x11::Window::Window(std::string_view title, uint32 width, uint32 height, std::unique_ptr<wnd::IEventTranslator<XEvent>>&& eventTranslator)
     : m_x11Display(XOpenDisplay(nullptr))
     , m_eventTranslator(std::move(eventTranslator))
@@ -111,3 +113,5 @@ void x11::Window::updateVisibility() noexcept {
         XLowerWindow(m_x11Display, m_x11WindowId);
     }
 }
+
+#endif

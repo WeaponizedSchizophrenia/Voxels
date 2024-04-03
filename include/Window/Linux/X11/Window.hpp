@@ -1,7 +1,7 @@
 #pragma once
-#if __linux__
-
 #include "Global.hpp"
+#ifdef WINDOW_API_X11
+
 #include "Window/IEventTranslator.hpp"
 #include "Window/IWindow.hpp"
 

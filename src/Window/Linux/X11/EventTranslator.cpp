@@ -5,12 +5,16 @@
  */
 
 #include "Window/Linux/X11/EventTranslator.hpp" // Declarations
+
+#ifdef WINDOW_API_X11
+
 #include "Window/Event/KeyboardEvent.hpp" // Keyboard event
 #include "Window/Event/MouseButtonEvent.hpp" // Mouse button event
 #include "Window/Event/MouseMotionEvent.hpp" // Mouse motion event
 #include "Window/Event/ResizeEvent.hpp" // Resize event
 #include "Window/Event/ScrollEvent.hpp" // Scroll event
 #include "Window/Event/CloseRequestedEvent.hpp" // Close requested event
+
 
 std::unique_ptr<wnd::IEvent> x11::EventTranslator::translateEvent(const XEvent& event) const noexcept {
     switch (event.type) {
@@ -63,3 +67,5 @@ std::unique_ptr<wnd::IEvent> x11::EventTranslator::translateEvent(const XEvent& 
     }
     return nullptr;
 }
+
+#endif

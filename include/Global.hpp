@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __linux__
+#define WINDOW_API_X11
+#else
+#error "Platform not supported"
+#endif
+
 using int8 = char;              //< Signed 8-bit integer
 using uint8 = unsigned char;    //< Unsigned 8-bit integer
 

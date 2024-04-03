@@ -10,7 +10,7 @@
 
 std::unique_ptr<wnd::IWindow> wnd::WindowBuilder::build() const {
     /* TODO: Add support for windows. */
-    #ifdef __linux__
+    #ifdef WINDOW_API_X11
     // Just create the x11 window with the held properties.
     return std::make_unique<x11::Window>(m_title, m_width, m_height, std::make_unique<x11::EventTranslator>());;
     #else
