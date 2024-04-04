@@ -101,7 +101,7 @@ void x11::Window::runLoop(const OnLoopIterationCallback& callback) {
         XClearWindow(m_x11Display, m_x11WindowId);
 
         // Call the provided callback.
-        callback(eventPtr.get());
+        callback(eventPtr.get(), deltaTime);
     }
 }
 

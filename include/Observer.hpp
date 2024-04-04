@@ -71,7 +71,7 @@ namespace voxels {
         /// @brief Alias for the observer class.
         using Observer_t = Observer<T...>;
 
-        Emitter() = default;
+        Emitter() noexcept : m_observers() {  }
 
         Emitter(const Emitter&) = delete;
         Emitter& operator=(const Emitter&) = delete;
@@ -85,7 +85,8 @@ namespace voxels {
          */
         inline void emit(T... arg) noexcept {
             for(auto observer : m_observers) {
-                observer->invoke(arg...);
+                if(observer)
+                    observer->invoke(arg...);
             }
         }
 
@@ -108,6 +109,6 @@ namespace voxels {
             m_observers.remove(observer);
         }
 
-        std::forward_list<Observer_t*> m_observers; //< Observer pointers.
+        std::forward_list<Observer_t*> m_observers = {}; //< Observer pointers.
     };
 }

@@ -16,6 +16,7 @@ if(CMAKE_HOST_LINUX)
     target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/Linux/X11/EventTranslator.cpp)
 endif()
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowBuilder.cpp)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowManager.cpp)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

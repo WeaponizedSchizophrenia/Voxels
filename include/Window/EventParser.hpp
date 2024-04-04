@@ -1,16 +1,22 @@
 #pragma once
 
+#include "Observer.hpp"
+#include "Window/Event/CloseRequestedEvent.hpp"
 #include "Window/Event/IEvent.hpp"
 #include "Window/Event/Key.hpp"
 #include "Window/Event/KeyboardEvent.hpp"
 #include "Window/Event/MouseButtonEvent.hpp"
+#include "Window/Event/MouseMotionEvent.hpp"
+#include "Window/Event/ResizeEvent.hpp"
+#include "Window/Event/ScrollEvent.hpp"
 #include <bitset>
+#include <memory>
 
 namespace wnd {
     /**
      * @brief Parses input events and stores the state in the parser. Which can be easily accessed through methods.
      */
-    class InputEventParser {
+    class EventParser {
     public:
         /**
          * @brief Holds the modifier state.
@@ -63,6 +69,19 @@ namespace wnd {
                     m_releasedMouseButtons.set(static_cast<uint8>(mbEvent->getButton()));
                 }
 
+            } else if(auto* scrollEvent = event.downCast<wnd::ScrollEvent>(); scrollEvent) {
+                CursorScrolled->emit(*scrollEvent);
+            } else if(auto* resizeEvent = event.downCast<wnd::ResizeEvent>(); resizeEvent) {
+                WindowResized->emit(*resizeEvent);
+            } else if(auto* motionEvent = event.downCast<wnd::MouseMotionEvent>(); motionEvent) {
+                int32 deltaX = motionEvent->getX() - m_lastCursorPos.x;
+                int32 deltaY = motionEvent->getY() - m_lastCursorPos.y;
+
+                MouseMoved->emit(deltaX, deltaY);
+                
+                m_lastCursorPos = { motionEvent->getX(), motionEvent->getY() };
+            } else if(auto* closeEvent = event.downCast<wnd::CloseRequestedEvent>(); closeEvent) {
+                CloseRequested->emit();
             }
         }
 
@@ -119,11 +138,21 @@ namespace wnd {
          */
         [[nodiscard]] inline const ModifierState& getModifierState() const noexcept { return m_modState; }
 
+        /// @brief Emitted when the window is resized.
+        std::shared_ptr<voxels::Emitter<const ResizeEvent&>> WindowResized = std::make_shared<voxels::Emitter<const ResizeEvent&>>();
+        /// @brief Emitted when the mouse is moved. ( Provides the delta from the last position. )
+        std::shared_ptr<voxels::Emitter<int32, int32>> MouseMoved = std::make_shared<voxels::Emitter<int32, int32>>();
+        /// @brief Emitted when the mouse wheel scrolls.
+        std::shared_ptr<voxels::Emitter<const ScrollEvent&>> CursorScrolled = std::make_shared<voxels::Emitter<const ScrollEvent&>>();
+        /// @brief Emitted when the window has been requested to close.
+        std::shared_ptr<voxels::Emitter<>> CloseRequested = std::make_shared<voxels::Emitter<>>();
+
     private:
         std::bitset<0xFF> m_pressedKeys; //< Bitset for all the pressed keys.
         std::bitset<0xFF> m_releasedKeys; //< Bitset for all the released keys.
         std::bitset<5> m_pressedMouseButtons; //< Bitset for all the pressed mouse buttons.
         std::bitset<5> m_releasedMouseButtons; //< Bitset for all the released mouse buttons.
         ModifierState m_modState; //< The modifier state.
+        struct { int32 x, y; } m_lastCursorPos;
     };
 }

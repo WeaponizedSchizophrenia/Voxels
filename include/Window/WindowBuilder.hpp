@@ -2,6 +2,7 @@
 
 #include "Global.hpp"
 #include "Window/IWindow.hpp" // For the window
+#include "Window/WindowManager.hpp"
 #include <memory> // For smart pointers
 #include <string> // For std::string
 
@@ -55,6 +56,13 @@ namespace wnd {
          * @return std::unique_ptr<IWindow> A pointer to the window.
          */
         [[nodiscard]] std::unique_ptr<IWindow> build() const;
+
+        /**
+         * @brief Builds the window and returns a window manager.
+         * 
+         * @return WindowManager The window manager containing the constructed window.
+         */
+        [[nodiscard]] inline WindowManager buildManager() const { return WindowManager(build()); }
 
     private:
         uint32 m_width, m_height; //< Window dimensions.
