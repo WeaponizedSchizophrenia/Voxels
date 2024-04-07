@@ -1,3 +1,7 @@
+#include "Global.hpp"
+#include "Observer.hpp"
+#include "Renderer/OpenGl/Renderer.hpp"
+#include "Window/Event/ResizeEvent.hpp"
 #include "Window/WindowBuilder.hpp"
 #include "Window/WindowManager.hpp"
 #include <iostream>
@@ -7,7 +11,14 @@ int main() {
         .setDimensions(800, 600)
         .buildManager();
 
-    windowManager.runLoop([](wnd::LoopDescriptor& loopDescriptor) {
+    auto renderer = renderer::opengl::Renderer(windowManager.getWindow());
+    auto observer = voxels::Observer<const wnd::ResizeEvent&>(windowManager.getEventParser().WindowResized, [&](const wnd::ResizeEvent& event) {
+        renderer.render(event.getWidth(), event.getHeight());
+    });
+
+    windowManager.runLoop([&](wnd::LoopDescriptor& loopDescriptor) {
+
+
         if(loopDescriptor.m_inputParser.isPressed(wnd::Key::Escape)) {
             loopDescriptor.m_shouldClose = true;
         }

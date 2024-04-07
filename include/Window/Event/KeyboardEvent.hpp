@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Window/Event/IEvent.hpp"
-#include "Window/Event/Key.hpp"
+#include "Window/Event/IEvent.hpp" // For the interface.
+#include "Window/Event/Key.hpp" // For the key enum.
 
 namespace wnd {
     /**

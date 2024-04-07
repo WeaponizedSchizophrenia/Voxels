@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Global.hpp"
-#include "Window/Event/IEvent.hpp"
+#include "Window/Event/IEvent.hpp" // For the interface.
 
 namespace wnd {
     /**

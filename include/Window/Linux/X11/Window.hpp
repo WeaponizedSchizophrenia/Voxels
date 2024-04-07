@@ -1,14 +1,16 @@
 #pragma once
+
 #include "Global.hpp"
+
 #ifdef WINDOW_API_X11
 
-#include "Window/IEventTranslator.hpp"
-#include "Window/IWindow.hpp"
+#include "Window/IEventTranslator.hpp" // For translating events.
+#include "Window/IWindow.hpp" // For the interface.
 
-#include <X11/Xlib.h>
-#include <memory>
+#include <X11/Xlib.h> // For X11.
+#include <memory> // For smart pointers.
 
-namespace x11 {
+namespace wnd::x11 {
     /**
      * @brief X11 Window manager.
      */
@@ -32,6 +34,23 @@ namespace x11 {
         }
         [[nodiscard]] virtual inline bool getVisibility() const noexcept override { return m_visible; }
         virtual inline void close() noexcept override { m_open = false; }
+
+        [[nodiscard]] virtual std::unique_ptr<renderer::ISurface> acceptVisitor(const renderer::IWindowVisitor& visitor) const override {
+            return visitor.visit(*this);
+        }
+
+        /**
+         * @brief Gets the display connection.
+         * 
+         * @return Display* The x11 display connection.
+         */
+        [[nodiscard]] Display* getDisplay() const noexcept { return m_x11Display; }
+        /**
+         * @brief Gets the window id.
+         * 
+         * @return uint64 The window id.
+         */
+        [[nodiscard]] uint64 getWindowId() const noexcept { return m_x11WindowId; }
 
     private:
         /**

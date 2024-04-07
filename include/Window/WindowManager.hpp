@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Global.hpp"
-#include "Observer.hpp"
-#include "Window/IWindow.hpp"
-#include "Window/EventParser.hpp"
-#include <functional>
-#include <memory>
+#include "Observer.hpp" // For the close requested observer.
+#include "Window/IWindow.hpp" // For the interface.
+#include "Window/EventParser.hpp" // For the event parser.
+#include <functional> // For the LoopCallback
+#include <memory> // For the smart pointers.
 
 namespace wnd {
     struct LoopDescriptor {
@@ -38,6 +38,8 @@ namespace wnd {
          * @return const EventParser& A reference to the event parser.
          */
         [[nodiscard]] inline const EventParser& getEventParser() const noexcept { return m_eventParser; }
+
+        [[nodiscard]] inline const IWindow& getWindow() const noexcept { return *m_window; }
 
     private:
         std::unique_ptr<IWindow> m_window; //< The managed window.

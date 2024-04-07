@@ -4,14 +4,17 @@
  * @brief This file contains the source for the X11 Window class.
  */
 
-#include "Window/Linux/X11/Window.hpp" // Declarations
-#include "Exception.hpp"
-#include <X11/Xutil.h> // X11 utility
-#include <chrono> // Required for the delta time calculations
+#include "Window/Linux/X11/Window.hpp" // Declarations.
+#include "Exception.hpp" // For exceptions.
+#include <GL/glx.h> // For glx functions.
+#include <X11/X.h> // For X11.
+#include <X11/Xlib.h> // For X11.
+#include <X11/Xutil.h> // X11 utility.
+#include <chrono> // Required for the delta time calculations.
 
 #ifdef WINDOW_API_X11
 
-x11::Window::Window(std::string_view title, uint32 width, uint32 height, std::unique_ptr<wnd::IEventTranslator<XEvent>>&& eventTranslator)
+wnd::x11::Window::Window(std::string_view title, uint32 width, uint32 height, std::unique_ptr<wnd::IEventTranslator<XEvent>>&& eventTranslator)
     : m_x11Display(XOpenDisplay(nullptr))
     , m_eventTranslator(std::move(eventTranslator))
     , m_width(width), m_height(height)
@@ -63,7 +66,7 @@ x11::Window::Window(std::string_view title, uint32 width, uint32 height, std::un
     XSetWMProtocols(m_x11Display, m_x11WindowId, &wmDeleteProtocol, 1);
 }
 
-x11::Window::~Window() {
+wnd::x11::Window::~Window() {
     // Unmap the window before destroying it just in case.
     XUnmapWindow(m_x11Display, m_x11WindowId);
     // Destroy the window.
@@ -75,7 +78,7 @@ x11::Window::~Window() {
     m_x11Display = nullptr;
 }
 
-void x11::Window::runLoop(const OnLoopIterationCallback& callback) {
+void wnd::x11::Window::runLoop(const OnLoopIterationCallback& callback) {
     // Map the window.
     XMapWindow(m_x11Display, m_x11WindowId);
 
@@ -105,7 +108,7 @@ void x11::Window::runLoop(const OnLoopIterationCallback& callback) {
     }
 }
 
-void x11::Window::updateVisibility() noexcept {
+void wnd::x11::Window::updateVisibility() noexcept {
     // If the window is visible, raise it, if not, lower it.
     if(m_visible) {
         XRaiseWindow(m_x11Display, m_x11WindowId);

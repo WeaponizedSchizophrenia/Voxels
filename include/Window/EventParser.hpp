@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Observer.hpp"
-#include "Window/Event/CloseRequestedEvent.hpp"
-#include "Window/Event/IEvent.hpp"
-#include "Window/Event/Key.hpp"
-#include "Window/Event/KeyboardEvent.hpp"
-#include "Window/Event/MouseButtonEvent.hpp"
-#include "Window/Event/MouseMotionEvent.hpp"
-#include "Window/Event/ResizeEvent.hpp"
-#include "Window/Event/ScrollEvent.hpp"
-#include <bitset>
-#include <memory>
+#include "Observer.hpp" // For the emmitter.
+#include "Window/Event/CloseRequestedEvent.hpp" // For handling the event.
+#include "Window/Event/IEvent.hpp" // For handling the event.
+#include "Window/Event/Key.hpp" // For storing the keys.
+#include "Window/Event/KeyboardEvent.hpp" // For handling the event.
+#include "Window/Event/MouseButtonEvent.hpp" // For handling the event.
+#include "Window/Event/MouseMotionEvent.hpp" // For handling the event.
+#include "Window/Event/ResizeEvent.hpp" // For handling the event.
+#include "Window/Event/ScrollEvent.hpp" // For handling the event.
+#include <bitset> // For the key data storage.
+#include <memory> // For the smart pointers.
 
 namespace wnd {
     /**

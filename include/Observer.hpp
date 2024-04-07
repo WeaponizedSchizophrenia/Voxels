@@ -1,8 +1,8 @@
 #pragma once
 
-#include <forward_list>
-#include <functional>
-#include <memory>
+#include <forward_list> // For the storage of observers.
+#include <functional> // For the callbacks.
+#include <memory> // For the smart pointers.
 
 // NOTE: The following code **SHOULD BE** memory safe however I have not tested it extensively.
 

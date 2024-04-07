@@ -16,7 +16,7 @@
 #include "Window/Event/CloseRequestedEvent.hpp" // Close requested event
 
 
-std::unique_ptr<wnd::IEvent> x11::EventTranslator::translateEvent(const XEvent& event) const noexcept {
+std::unique_ptr<wnd::IEvent> wnd::x11::EventTranslator::translateEvent(const XEvent& event) const noexcept {
     switch (event.type) {
         case ButtonPress: {
             switch (event.xbutton.button) {

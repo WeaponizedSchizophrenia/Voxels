@@ -4,10 +4,10 @@
 
 #ifdef WINDOW_API_X11
 
-#include "Window/IEventTranslator.hpp"
-#include <X11/Xlib.h>
+#include "Window/IEventTranslator.hpp" // For the interface.
+#include <X11/Xlib.h> // X11 library for the delete window protocol.
 
-namespace x11 {
+namespace wnd::x11 {
     /**
      * @brief Default X11 event translator.
      */

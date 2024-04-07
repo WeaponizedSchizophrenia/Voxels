@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Global.hpp"
-#include "Window/Event/IEvent.hpp"
+#include "Renderer/IWindowVisitor.hpp" // For the visitor
+#include "Renderer/ISurface.hpp" // For the context return from visitor
+#include "Window/Event/IEvent.hpp" // For events
 #include <functional> // For the OnLoopIterationCallback
+#include <memory> // For smart pointers
 
 namespace wnd {
     /**
@@ -45,5 +48,15 @@ namespace wnd {
          * @throws Only if the provided callback throws.
          */
         virtual void runLoop(const OnLoopIterationCallback& callback) = 0;
+
+        /**
+         * @brief Accepts a window visitor and returns the visitor returned IContext.
+         * 
+         * @param visitor The window visitor
+         * @return std::unique_ptr<renderer::IContext> The visitor returned IContext.
+         */
+        [[nodiscard]] virtual std::unique_ptr<renderer::ISurface> acceptVisitor(const renderer::IWindowVisitor& visitor) const {
+            return visitor.visit(*this);
+        }
     };
 }
