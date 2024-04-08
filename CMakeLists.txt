@@ -12,6 +12,7 @@ target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(Voxels PRIVATE GL)
 
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/File.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowBuilder.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowManager.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer/OpenGl/Renderer.cpp)

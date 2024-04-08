@@ -10,6 +10,13 @@ namespace renderer::opengl {
      */
     class Renderer {
     public:
+        /**
+         * @brief Construct a new OpenGL renderer.
+         * 
+         * @param window The window on to which to render.
+         *
+         * @throws voxels::Exception If the window api is not supported.
+         */
         explicit Renderer(const wnd::IWindow& window);
 
         /**
