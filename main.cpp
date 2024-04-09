@@ -13,11 +13,10 @@ int main() {
 
     auto renderer = renderer::opengl::Renderer(windowManager.getWindow());
     auto observer = voxels::Observer<const wnd::ResizeEvent&>(windowManager.getEventParser().WindowResized, [&](const wnd::ResizeEvent& event) {
-        renderer.render(event.getWidth(), event.getHeight());
+        renderer.getSurface().updateViewport(event.getWidth(), event.getHeight());
     });
 
     windowManager.runLoop([&](wnd::LoopDescriptor& loopDescriptor) {
-
 
         if(loopDescriptor.m_inputParser.isPressed(wnd::Key::Escape)) {
             loopDescriptor.m_shouldClose = true;
@@ -25,6 +24,9 @@ int main() {
         if(loopDescriptor.m_inputParser.isPressed(wnd::Key::Function1)) {
             std::cout << loopDescriptor.m_deltaTime << '\n';
         }
+
+        renderer.render();
+
     });
 
     return 0;

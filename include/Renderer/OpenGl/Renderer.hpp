@@ -22,9 +22,22 @@ namespace renderer::opengl {
         /**
          * @brief Renders the held data.
          */
-        void render(int32 width, int32 height);
+        void render();
+
+        /**
+         * @brief Gets the Surface.
+         * 
+         * @return const ISurface& A const reference to the surface.
+         */
+        [[nodiscard]] inline const ISurface& getSurface() const noexcept { return *m_surface; }
+        /**
+         * @brief Gets the Surface.
+         * 
+         * @return ISurface& A mutable reference to the surface.
+         */
+        [[nodiscard]] inline ISurface& getSurface() noexcept { return *m_surface; }
 
     private:
-        std::unique_ptr<renderer::ISurface> m_surface; //< The surface to render to.
+        std::shared_ptr<ISurface> m_surface; //< The surface to render to.
     };
 }

@@ -4,15 +4,15 @@
  * @brief This file contains the source for the X11 Window class.
  */
 
+#include "Global.hpp"
+#ifdef WINDOW_API_X11
 #include "Window/Linux/X11/Window.hpp" // Declarations.
 #include "Exception.hpp" // For exceptions.
-#include <GL/glx.h> // For glx functions.
 #include <X11/X.h> // For X11.
 #include <X11/Xlib.h> // For X11.
 #include <X11/Xutil.h> // X11 utility.
 #include <chrono> // Required for the delta time calculations.
 
-#ifdef WINDOW_API_X11
 
 wnd::x11::Window::Window(std::string_view title, uint32 width, uint32 height, std::unique_ptr<wnd::IEventTranslator<XEvent>>&& eventTranslator)
     : m_x11Display(XOpenDisplay(nullptr))
@@ -92,19 +92,20 @@ void wnd::x11::Window::runLoop(const OnLoopIterationCallback& callback) {
         lastFrameStart = frameStart;
 
         XEvent event;
-        std::unique_ptr<wnd::IEvent> eventPtr = nullptr;
-        // If there are events in the queue, get the first one.
-        if(XEventsQueued(m_x11Display, QueuedAlready) > 0) {
+        std::vector<std::unique_ptr<wnd::IEvent>> events;
+        events.reserve(XEventsQueued(m_x11Display, QueuedAlready));
+        // If there are events in the queue, get all of them.
+        while(XEventsQueued(m_x11Display, QueuedAlready) > 0) {
             XNextEvent(m_x11Display, &event);
             // Translate the event with the provided translator.
-            eventPtr = m_eventTranslator->translateEvent(event);
+            events.push_back(m_eventTranslator->translateEvent(event));
         }
 
         // Clear the window.
         XClearWindow(m_x11Display, m_x11WindowId);
 
         // Call the provided callback.
-        callback(eventPtr.get(), deltaTime);
+        callback(events, deltaTime);
     }
 }
 

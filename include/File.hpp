@@ -4,6 +4,12 @@
 #include <future> // For asynchronous IO.
 #include <string_view> // For string view.
 
+/*
+    Current File is not very useful.
+    However in the future as more features are needed it should be a lot
+    more useful and easier to use then std::fstream.
+*/
+
 namespace voxels {
     /**
      * @brief std::fstream wrapper.

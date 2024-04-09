@@ -5,33 +5,27 @@
  */
 
 #include "Renderer/OpenGl/Renderer.hpp" // For declarations.
+#include "Exception.hpp" // For exceptions.
 #include "Renderer/OpenGl/WindowVisitor.hpp" // For the visitor.
-#include <GL/gl.h> // For OpenGl functions.
-#include <GL/glx.h> // For glx functions.
-
-
-void DrawAQuad() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0, 0.0, 0.0); glVertex3f(-0.75, -0.75, 0.0);
-    glColor3f(0.0, 1.0, 0.0); glVertex3f(0.75, -0.75, 0.0);
-    glColor3f(0.0, 0.0, 1.0); glVertex3f( 0.0, 0.75, 0.0);
-    glEnd();
-}
+#include "glad/glad.h" // For glad functions.
 
 renderer::opengl::Renderer::Renderer(const wnd::IWindow& window)
     : m_surface(window.acceptVisitor(renderer::opengl::WindowVisitor())) 
 {
-    
+    m_surface->bind();
+    if(!gladLoadGL()) {
+        THROW_EXCEPTION("Could not load GL.");
+    }
+    m_surface->unBind();
 }
 
-void renderer::opengl::Renderer::render(int32 width, int32 height) {
+void renderer::opengl::Renderer::render() {
     m_surface->bind();
-    glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, width, height);
-    DrawAQuad();
+
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     m_surface->swapBuffers();
+    
     m_surface->unBind();
 }

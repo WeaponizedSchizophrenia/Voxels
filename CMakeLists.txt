@@ -9,14 +9,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(Voxels main.cpp)
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include)
 
-target_link_libraries(Voxels PRIVATE GL)
 
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/File.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowBuilder.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/WindowManager.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer/OpenGl/Renderer.cpp)
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer/OpenGl/WindowVisitor.cpp)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer/OpenGl/Shader.cpp)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer/OpenGl/Pipeline.cpp)
 
 if(CMAKE_HOST_LINUX)
     find_package(X11 REQUIRED)
@@ -25,7 +27,8 @@ if(CMAKE_HOST_LINUX)
     target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Window/Linux/X11/EventTranslator.cpp)
 endif()
 
-
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/glad.c)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/glad_glx.c)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

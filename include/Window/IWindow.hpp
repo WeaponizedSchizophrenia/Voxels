@@ -19,7 +19,7 @@ namespace wnd {
          * @param event The event pointer, if it is nullptr that means that no event has occurred.
          * @param deltaTime The time between this frame and the last in seconds.
          */
-        using OnLoopIterationCallback = std::function<void(IEvent* event, float64 deltaTime)>;
+        using OnLoopIterationCallback = std::function<void(std::vector<std::unique_ptr<IEvent>>& event, float64 deltaTime)>;
 
         virtual ~IWindow() = default;
 

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Global.hpp"
 #ifdef WINDOW_API_X11
 
 #include "Renderer/ISurface.hpp" // For the interface
-#include "GL/glx.h" // For the GLX objects.
+#include "glad/glad_glx.h" // For the GLX objects.
 
 namespace renderer::opengl {
     /**
@@ -22,6 +23,9 @@ namespace renderer::opengl {
         }
         virtual void swapBuffers() override {
             glXSwapBuffers(m_x11Display, m_x11WindowHandle);
+        }
+        virtual void updateViewport(uint32 width, uint32 height) override {
+            glViewport(0, 0, width, height);
         }
 
     private:

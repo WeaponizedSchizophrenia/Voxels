@@ -11,7 +11,7 @@ wnd::WindowManager::WindowManager(std::unique_ptr<IWindow>&& window) noexcept
     ) {  }
 
 void wnd::WindowManager::runLoop(const LoopCallback& callback) {
-    m_window->runLoop([this, &callback](IEvent* event, float64 deltaTime) {
+    m_window->runLoop([this, &callback](std::vector<std::unique_ptr<IEvent>>& event, float64 deltaTime) {
 
     // Setup the loop descriptor.
     auto loopDescriptor = wnd::LoopDescriptor {
@@ -21,7 +21,7 @@ void wnd::WindowManager::runLoop(const LoopCallback& callback) {
     };
 
     // Parse the event if there is one.
-    if(event) {
+    for(const auto& event : event) {
         m_eventParser.parseEvent(*event);
     }
 
