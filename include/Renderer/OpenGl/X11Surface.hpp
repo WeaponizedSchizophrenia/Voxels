@@ -15,10 +15,10 @@ namespace renderer::opengl {
         explicit X11Surface(Display* display, GLXDrawable drawable, GLXContext context) noexcept
             : m_x11Display(display), m_x11WindowHandle(drawable), m_context(context) {  }
 
-        virtual void bind() const override {
+        virtual void bind() const noexcept override {
             glXMakeCurrent(m_x11Display, m_x11WindowHandle, m_context);
         }
-        virtual void unBind() const override {
+        virtual void unBind() const noexcept override {
             glXMakeCurrent(m_x11Display, 0, nullptr);
         }
         virtual void swapBuffers() override {

@@ -28,11 +28,11 @@ namespace renderer::opengl {
          */
         [[nodiscard]] static Pipeline linkShaders(Shader vertexShader, Shader fragmentShader);
 
-        virtual void bind() const override {
+        virtual void bind() const noexcept override {
             glUseProgram(m_programId);
         }
 
-        virtual void unBind() const override {
+        virtual void unBind() const noexcept override {
             glUseProgram(0);   
         }
 

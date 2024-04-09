@@ -21,7 +21,7 @@ namespace renderer {
          * @param height The new height.
          */
         virtual void updateViewport(uint32 width, uint32 height) = 0;
-        virtual void bind() const override = 0;
-        virtual void unBind() const override = 0;
+        virtual void bind() const noexcept override = 0;
+        virtual void unBind() const noexcept override = 0;
     };
 }

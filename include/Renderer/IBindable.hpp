@@ -10,10 +10,10 @@ namespace renderer {
         /**
          * @brief Binds this object as the current one.
          */
-        virtual void bind() const = 0;
+        virtual void bind() const noexcept = 0;
         /**
          * @brief Ubinds the current object and leaves it unbound.
          */
-        virtual void unBind() const = 0;
+        virtual void unBind() const noexcept = 0;
     };
 }
