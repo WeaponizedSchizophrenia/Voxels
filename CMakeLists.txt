@@ -7,11 +7,14 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_subdirectory(external/glm)
+
 add_executable(Voxels main.cpp)
 
 # Includes
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include)
+target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glm)
 
 # General
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/File.cpp)

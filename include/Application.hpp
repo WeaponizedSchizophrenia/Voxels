@@ -17,7 +17,7 @@ namespace voxels {
             , m_wndResizeObserver(
                 voxels::Observer<const wnd::ResizeEvent&>(m_windowManager.getEventParser().WindowResized,
                     [this](const wnd::ResizeEvent& event) {
-                        m_renderer->getSurface().updateViewport(event.getWidth(), event.getHeight());
+                        m_renderer->getSurface().setViewportSize(event.getWidth(), event.getHeight());
                     })
             ) {  }
 

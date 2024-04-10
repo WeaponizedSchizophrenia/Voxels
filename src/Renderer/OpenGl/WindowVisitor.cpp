@@ -19,6 +19,7 @@ static GLint GLX_ATTRIBUTES[] = {
     GLX_GREEN_SIZE, 8,
     GLX_RED_SIZE, 8,
     GLX_ALPHA_SIZE, 8,
+    GLX_SAMPLES, 4,
     GLX_DOUBLEBUFFER,
     None
 };
