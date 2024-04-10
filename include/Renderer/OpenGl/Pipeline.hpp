@@ -2,6 +2,7 @@
 
 #include "Renderer/OpenGl/Shader.hpp" // For the shader.
 #include "Renderer/IBindable.hpp" // For the interface.
+#include <string>
 
 namespace renderer::opengl {
     /**
@@ -34,6 +35,20 @@ namespace renderer::opengl {
 
         virtual void unBind() const noexcept override {
             glUseProgram(0);   
+        }
+
+        /**
+         * @brief Sets a uniform in the pipeline.
+         * 
+         * @param name The name of the uniform.
+         * @param value The value of the uniform.
+         *
+         * @note This function unbinds this pipeline after it is done.
+         */
+        void setUniform(const std::string& name, float value) const noexcept {
+            bind();
+            glUniform1f(glGetUniformLocation(m_programId, name.c_str()), value);
+            unBind();
         }
 
     private:

@@ -44,6 +44,7 @@ void drawTriangle() {
     vertexArray.copyDataIntoVertexBuffer(VERTICES, sizeof(VERTICES));
     vertexArray.copyDataIntoIndexBuffer(INDICES, sizeof(INDICES));
 
+    pipeline.setUniform("brightness", 1.5f);
     pipeline.bind();
     vertexArray.bind();
     glDrawElements(GL_TRIANGLES, std::size(INDICES), GL_UNSIGNED_INT, nullptr);
@@ -79,8 +80,11 @@ void drawSquare() {
     vertexArray.copyDataIntoVertexBuffer(VERTICES, sizeof(VERTICES));
     vertexArray.copyDataIntoIndexBuffer(INDICES, sizeof(INDICES));
 
+    pipeline.setUniform("brightness", 0.5f);
     pipeline.bind();
     vertexArray.bind();
+
+
     glDrawElements(GL_TRIANGLES, std::size(INDICES), GL_UNSIGNED_INT, nullptr);
 }
 
