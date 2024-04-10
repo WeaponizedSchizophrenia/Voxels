@@ -9,14 +9,17 @@
 #include "Renderer/ISurface.hpp" // For the surface.
 #include "Renderer/OpenGl/X11Surface.hpp" // For the x11 surface implementation.
 #include "Window/Linux/X11/Window.hpp" // For x11 window implementation.
-#include "glad/glad_glx.h" // For GLX functions.
 #include <memory> // For smart pointers.
 
 /// @brief The OpenGl attributes.
-static GLint ATTRIBUTES[] = {
+static GLint GLX_ATTRIBUTES[] = {
     GLX_DEPTH_SIZE, 24,
+    GLX_STENCIL_SIZE, 8,
+    GLX_BLUE_SIZE, 8,
+    GLX_GREEN_SIZE, 8,
+    GLX_RED_SIZE, 8,
+    GLX_ALPHA_SIZE, 8,
     GLX_DOUBLEBUFFER,
-    GLX_RGBA,
     None
 };
 
@@ -27,12 +30,15 @@ std::unique_ptr<renderer::ISurface> renderer::opengl::WindowVisitor::visit(const
 std::unique_ptr<renderer::ISurface> renderer::opengl::WindowVisitor::visit(const wnd::x11::Window& window) const {
     auto display = window.getDisplay();
     auto screen = XDefaultScreen(display);
-    if(!gladLoadGLX(display, screen)) {
+
+    if(!gladLoaderLoadGLX(display, screen)) {
         THROW_EXCEPTION("Could not load GLX.");
     }
 
-    auto visual = glXChooseVisual(display, screen, ATTRIBUTES);
-    auto ctx = glXCreateContext(display, visual, nullptr, GL_TRUE);
+    int fbCount;
+    auto fbConfig = glXChooseFBConfig(display, screen, GLX_ATTRIBUTES, &fbCount);
+
+    auto ctx = glad_glXCreateNewContext(display, *fbConfig, GLX_RGBA_TYPE, nullptr, GL_TRUE);
 
     return std::make_unique<renderer::opengl::X11Surface>(display, window.getWindowId(), ctx);
 }

@@ -4,7 +4,7 @@
 #ifdef WINDOW_API_X11
 
 #include "Renderer/ISurface.hpp" // For the interface
-#include "glad/glad_glx.h" // For the GLX objects.
+#include "glad/glx.h" // For the GLX objects.
 
 namespace renderer::opengl {
     /**

@@ -32,8 +32,8 @@ if(CMAKE_HOST_LINUX)
 endif()
 
 # Glad
-target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/glad.c)
-target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/glad_glx.c)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/gl.c)
+target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/src/glx.c)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer/ShaderType.hpp" // For the shader type.
-#include "glad/glad.h" // For glad functions.
+#include "glad/gl.h" // For glad functions.
 #include <string_view> // For string view.
 
 namespace renderer::opengl {

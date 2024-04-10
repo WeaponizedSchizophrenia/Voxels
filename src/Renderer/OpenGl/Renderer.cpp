@@ -5,7 +5,6 @@
  */
 
 #include "Renderer/OpenGl/Renderer.hpp" // For declarations.
-#include "Exception.hpp" // For exceptions.
 #include "File.hpp"
 #include "Renderer/OpenGl/Buffer.hpp"
 #include "Renderer/OpenGl/Pipeline.hpp"
@@ -13,7 +12,7 @@
 #include "Renderer/OpenGl/VertexArray.hpp"
 #include "Renderer/OpenGl/VertexBufferAttributes.hpp"
 #include "Renderer/OpenGl/WindowVisitor.hpp" // For the visitor.
-#include "glad/glad.h" // For glad functions.
+#include <iostream>
 
 // Temporary
 void drawTriangle() {
@@ -89,9 +88,12 @@ renderer::opengl::Renderer::Renderer(const wnd::IWindow& window)
     : m_surface(window.acceptVisitor(renderer::opengl::WindowVisitor())) 
 {
     m_surface->bind();
-    if(!gladLoadGL()) {
+    if(!gladLoaderLoadGL()) {
         THROW_EXCEPTION("Could not load GL.");
     }
+
+    std::cout << glGetString(GL_VERSION) << '\n';
+
     m_surface->unBind();
 }
 

@@ -3,7 +3,6 @@
 #include "Global.hpp"
 #include "Renderer/IBindable.hpp"
 #include "Renderer/OpenGl/Common.hpp"
-#include "glad/glad.h"
 #include <GL/glu.h>
 #include <initializer_list>
 #include <vector>
