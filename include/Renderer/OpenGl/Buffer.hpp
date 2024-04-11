@@ -6,6 +6,9 @@
 #include <cstddef>
 
 namespace renderer::opengl {
+    /**
+     * @brief Interface for a buffer.
+     */
     class IBuffer: public IBindable {
     public: 
         using IBindable::bind, IBindable::unBind;
@@ -19,6 +22,11 @@ namespace renderer::opengl {
         virtual void copyDataIntoBuffer(const void* data, size_t size, GLenum usage = GL_STATIC_DRAW) noexcept = 0;
     };
 
+    /**
+     * @brief Generic buffer type.
+     * 
+     * @tparam Type The OpenGl type of the buffer.
+     */
     template<GLenum Type>
     class Buffer: public IBuffer {
     public:
@@ -52,9 +60,11 @@ namespace renderer::opengl {
         }
 
     protected:
-        GLuint m_buffer;
+        GLuint m_buffer; //< The underlying OpenGl buffer.
     };
 
+    /// @brief An OpenGl vertex buffer.
     using VertexBuffer = Buffer<GL_ARRAY_BUFFER>;
+    /// @brief An OpenGl index buffer.
     using IndexBuffer = Buffer<GL_ELEMENT_ARRAY_BUFFER>;
 }

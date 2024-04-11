@@ -22,3 +22,6 @@ static constexpr const char* const ENGINE_NAME = "Voxels"; //< The engine name
 static constexpr uint32 ENGINE_VERSION_MAJOR = 0; //< The engine major version
 static constexpr uint32 ENGINE_VERSION_MINOR = 0; //< The engine minor version
 static constexpr uint32 ENGINE_VERSION_PATCH = 1; //< The engine patch version
+
+static constexpr const uint32 MAX_OCT_TREE_DEPTH = 6;
+static constexpr const uint32 CHUNK_LENGTH = 1 << MAX_OCT_TREE_DEPTH;
