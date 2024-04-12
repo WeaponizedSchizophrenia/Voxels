@@ -8,8 +8,12 @@ namespace voxels {
     class OctTree {
     public:
         explicit OctTree(T&& data, glm::vec3 center) noexcept
-            : m_root(OctTreeLeaf<T>(std::move(data), 0, center)) {  }
+            : m_root(OctTreeBranch<T>(std::move(data), 0, center)) {  }
+
+        [[nodiscard]] inline OctTreeBranch<T>& getRoot() noexcept { return m_root; }
+        [[nodiscard]] inline const OctTreeBranch<T>& getRoot() const noexcept { return m_root; }
+
     private:
-        OctTreeNode<T> m_root;
+        OctTreeBranch<T> m_root;
     };
 }
