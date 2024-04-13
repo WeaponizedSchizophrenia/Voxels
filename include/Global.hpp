@@ -23,5 +23,5 @@ static constexpr uint32 ENGINE_VERSION_MAJOR = 0; //< The engine major version
 static constexpr uint32 ENGINE_VERSION_MINOR = 0; //< The engine minor version
 static constexpr uint32 ENGINE_VERSION_PATCH = 1; //< The engine patch version
 
-static constexpr const uint32 MAX_OCT_TREE_DEPTH = 6;
-static constexpr const uint32 CHUNK_LENGTH = 1 << MAX_OCT_TREE_DEPTH;
+static constexpr const uint32 MAX_OCT_TREE_DEPTH = sizeof(uint64); //< The max depth of the oct tree.
+static constexpr const uint32 CHUNK_LENGTH = 1 << MAX_OCT_TREE_DEPTH; //< The length of the chunk or one oct tree.

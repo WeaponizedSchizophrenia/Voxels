@@ -50,6 +50,7 @@ namespace wnd {
 
                 } else {
                     m_releasedKeys.set(static_cast<uint8>(keyEvent->getKey()));
+                    m_heldKeys.set(static_cast<uint8>(keyEvent->getKey()), false);
 
                     switch(keyEvent->getKey()) {
                         case wnd::Key::LeftControl:     { m_modState.m_leftCtrl = false; }
@@ -67,6 +68,7 @@ namespace wnd {
                     m_pressedMouseButtons.set(static_cast<uint8>(mbEvent->getButton()));
                 } else {
                     m_releasedMouseButtons.set(static_cast<uint8>(mbEvent->getButton()));
+                    m_heldMouseButtons.set(static_cast<uint8>(mbEvent->getButton()), false);
                 }
 
             } else if(auto* scrollEvent = event.downCast<wnd::ScrollEvent>(); scrollEvent) {
@@ -89,8 +91,13 @@ namespace wnd {
          * @brief Resets the state.
          */
         void onLoopEnded() noexcept {
+            m_heldKeys |= m_pressedKeys;
+
             m_pressedKeys.reset();
             m_releasedKeys.reset();
+
+            m_heldMouseButtons |= m_pressedMouseButtons;
+
             m_pressedMouseButtons.reset();
             m_releasedMouseButtons.reset();
         }
@@ -102,7 +109,9 @@ namespace wnd {
          * @return true If the key was pressed.
          * @return false If the key was not pressed.
          */
-        [[nodiscard]] inline bool isPressed(wnd::Key key) const noexcept { return m_pressedKeys.test(static_cast<uint8>(key)); }
+        [[nodiscard]] inline bool isPressed(wnd::Key key) const noexcept { 
+            return m_pressedKeys.test(static_cast<uint8>(key)); 
+        }
         /**
          * @brief Returns whether or not the key was released.
          * 
@@ -110,7 +119,13 @@ namespace wnd {
          * @return true If the key was released.
          * @return false If the key was not released.
          */
-        [[nodiscard]] inline bool isReleased(wnd::Key key) const noexcept { return m_releasedKeys.test(static_cast<uint8>(key)); }
+        [[nodiscard]] inline bool isReleased(wnd::Key key) const noexcept { 
+            return m_releasedKeys.test(static_cast<uint8>(key)); 
+        }
+
+        [[nodiscard]] inline bool isHeld(wnd::Key key) const noexcept {
+            return m_heldKeys.test(static_cast<uint8>(key));
+        }
 
         /**
          * @brief Returns whether or not the mouse button was pressed.
@@ -131,6 +146,10 @@ namespace wnd {
         [[nodiscard]] inline bool isReleased(wnd::MouseButtonEvent::Button button) const noexcept { 
             return m_releasedMouseButtons.test(static_cast<uint8>(button)); }
 
+        [[nodiscard]] inline bool isHeld(wnd::MouseButtonEvent::Button button) const noexcept {
+            return m_heldMouseButtons.test(static_cast<uint8>(button));
+        }
+
         /**
          * @brief Returns a reference to the modifier state.
          * 
@@ -149,8 +168,10 @@ namespace wnd {
 
     private:
         std::bitset<0xFF> m_pressedKeys; //< Bitset for all the pressed keys.
+        std::bitset<0xFF> m_heldKeys; //< Bitset for all the held keys.
         std::bitset<0xFF> m_releasedKeys; //< Bitset for all the released keys.
         std::bitset<5> m_pressedMouseButtons; //< Bitset for all the pressed mouse buttons.
+        std::bitset<5> m_heldMouseButtons; //< Bitset for all the held mouse buttons.
         std::bitset<5> m_releasedMouseButtons; //< Bitset for all the released mouse buttons.
         ModifierState m_modState; //< The modifier state.
         struct { int32 x, y; } m_lastCursorPos;

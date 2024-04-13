@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CameraDescriptor.hpp"
 #include "Renderer/ISurface.hpp"
 
 namespace renderer {
@@ -23,7 +24,9 @@ namespace renderer {
 
         /**
          * @brief Renders the held data.
+         *
+         * @param cameraDescriptor The camera descriptor.
          */
-        virtual void render() = 0;
+        virtual void render(const voxels::CameraDescriptor& cameraDescriptor) = 0;
     };
 }

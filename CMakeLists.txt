@@ -15,6 +15,7 @@ add_executable(Voxels main.cpp)
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include)
 target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/glm)
+target_include_directories(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/OBJ-Loader)
 
 # General
 target_sources(Voxels PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/File.cpp)

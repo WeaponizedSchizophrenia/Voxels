@@ -23,7 +23,7 @@ namespace renderer::opengl {
         [[nodiscard]] virtual inline ISurface& getSurface() noexcept override { return *m_surface; }
         [[nodiscard]] virtual inline const ISurface& getSurface() const noexcept override { return *m_surface; }
 
-        virtual void render() override;
+        virtual void render(const voxels::CameraDescriptor& cameraDescriptor) override;
 
     private:
         std::shared_ptr<ISurface> m_surface; //< The surface to render to.

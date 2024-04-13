@@ -11,9 +11,8 @@ namespace renderer::opengl {
          * 
          * @throws voxels::Exception If the vertex array could not be created.
          */
-        explicit VertexArray(VertexBufferAttributes&& attributes)
+        explicit VertexArray(const VertexBufferAttributes& attributes)
             : m_vao(0)
-            , m_vertexBufferAttributes(std::move(attributes))
             , m_vertexBuffer(), m_indexBuffer()
         {
             glGenVertexArrays(1, &m_vao);
@@ -22,7 +21,7 @@ namespace renderer::opengl {
             }
             bind();
             m_vertexBuffer.bind();
-            m_vertexBufferAttributes.bind();
+            attributes.bind();
             m_indexBuffer.bind();
             unBind();
             m_vertexBuffer.unBind();
@@ -64,6 +63,5 @@ namespace renderer::opengl {
         GLuint m_vao;
         VertexBuffer m_vertexBuffer;
         IndexBuffer m_indexBuffer;
-        VertexBufferAttributes m_vertexBufferAttributes;
     };
 }

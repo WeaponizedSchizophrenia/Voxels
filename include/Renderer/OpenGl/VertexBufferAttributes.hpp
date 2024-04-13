@@ -3,20 +3,11 @@
 #include "Global.hpp"
 #include "Renderer/IBindable.hpp"
 #include "Renderer/OpenGl/Common.hpp"
-#include <GL/glu.h>
+#include "Renderer/AttributeDescriptor.hpp"
 #include <initializer_list>
 #include <vector>
 
 namespace renderer::opengl {
-    /**
-     * @brief Describes a single vertex buffer attribute.
-     */
-    struct AttributeDescriptor {
-        GLenum type; //< The type of the attribute.
-        GLuint count; //< The number of the specified type.
-        GLboolean normalized = GL_FALSE; //< Whether the attribute should be normalized.
-    };
-
     /**
      * @brief Holds and manages vertex buffer attributes.
      */
@@ -25,6 +16,14 @@ namespace renderer::opengl {
         constexpr explicit VertexBufferAttributes() noexcept = default;
         constexpr explicit VertexBufferAttributes(uint32 attributeCount) noexcept {
             m_attributes.reserve(attributeCount);
+        }
+        template<size_t N>
+        constexpr VertexBufferAttributes(std::array<AttributeDescriptor, N>&& attributes) noexcept
+            : m_attributes(attributes.begin(), attributes.end())
+        {
+            for(const auto& attribute : m_attributes) {
+                m_stride += attribute.count * getSizeOfType(attribute.type);
+            }
         }
         constexpr VertexBufferAttributes(std::initializer_list<AttributeDescriptor> attributes) noexcept
             : m_attributes(attributes) 
@@ -47,7 +46,7 @@ namespace renderer::opengl {
         constexpr virtual void bind() const noexcept override {
             auto currentSize = 0u;
             for(int i = 0; i < m_attributes.size(); ++i) {
-                glVertexAttribPointer(i, m_attributes[i].count, m_attributes[i].type, m_attributes[i].normalized, 
+                glVertexAttribPointer(i, m_attributes[i].count, fromAttributeType(m_attributes[i].type), m_attributes[i].normalized, 
                     m_stride, reinterpret_cast<void*>(currentSize));
                 currentSize += m_attributes[i].count * getSizeOfType(m_attributes[i].type);
                 glEnableVertexAttribArray(i);
