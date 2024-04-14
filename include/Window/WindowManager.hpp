@@ -9,9 +9,9 @@
 
 namespace wnd {
     struct LoopDescriptor {
-        bool m_shouldClose = false;
-        const float64 m_deltaTime;
-        const EventParser& m_inputParser;
+        bool shouldClose = false;
+        const float64 deltaTime;
+        const EventParser& eventParser;
     };
 
     class WindowManager {
@@ -35,15 +35,15 @@ namespace wnd {
         /**
          * @brief Gets the event parser.
          * 
-         * @return const EventParser& A reference to the event parser.
+         * @return std::shared_ptr<EventParser> The pointer to the event parser.
          */
-        [[nodiscard]] inline const EventParser& getEventParser() const noexcept { return m_eventParser; }
+        [[nodiscard]] inline std::shared_ptr<EventParser> getEventParser() const noexcept { return m_eventParser; }
 
         [[nodiscard]] inline const IWindow& getWindow() const noexcept { return *m_window; }
 
     private:
         std::unique_ptr<IWindow> m_window; //< The managed window.
-        EventParser m_eventParser; //< The input parser. 
+        std::shared_ptr<EventParser> m_eventParser; //< The input parser. 
         voxels::Observer<> m_closeRequestedObserver; //< Observer for the close requested event.
     };
 }

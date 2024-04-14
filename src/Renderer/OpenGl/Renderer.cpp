@@ -59,9 +59,9 @@ void renderer::opengl::Renderer::render(const voxels::CameraDescriptor& cameraDe
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    // glEnable(GL_CULL_FACE);
-    // glFrontFace(GL_CCW);
-    // glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -69,12 +69,11 @@ void renderer::opengl::Renderer::render(const voxels::CameraDescriptor& cameraDe
     time += 0.0006f;
 
     auto model = glm::mat4(1.0f);
-    model = glm::scale(model, {0.5f, 0.5f, 0.5f});
-    model = glm::rotate(model, time, {0.0f, 1.0f, 0.0f});
-    model = glm::rotate(model, time, {1.0f, 0.0f, 0.0f});
-    model = glm::rotate(model, time, {0.0f, 0.0f, 1.0f});
-    auto view = glm::lookAtRH(glm::vec3{1.0f, 0.0f, 2.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f});
-    view = cameraDescriptor.constructViewMatrix();
+    // model = glm::scale(model, {0.5f, 0.5f, 0.5f});
+    // model = glm::rotate(model, time, {0.0f, 1.0f, 0.0f});
+    // model = glm::rotate(model, time, {1.0f, 0.0f, 0.0f});
+    // model = glm::rotate(model, time, {0.0f, 0.0f, 1.0f});
+    auto view = cameraDescriptor.constructViewMatrix();
     auto [width, height] = m_surface->getViewportSize();
     auto perspective = glm::perspectiveFov(
         cameraDescriptor.fieldOfView, 
@@ -84,8 +83,6 @@ void renderer::opengl::Renderer::render(const voxels::CameraDescriptor& cameraDe
         1024.0f
     );
     auto mvp = perspective * view * model;
-
-    // mvp = glm::mat4(1.0f);
 
     pipeline.setUniform("mvp", mvp);
     pipeline.setUniform("brightness", 1.0f);
