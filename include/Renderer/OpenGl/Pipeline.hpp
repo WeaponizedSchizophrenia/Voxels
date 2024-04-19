@@ -3,8 +3,7 @@
 #include "Renderer/OpenGl/Shader.hpp" // For the shader.
 #include "Renderer/IBindable.hpp" // For the interface.
 #include "gtc/type_ptr.hpp"
-#include "matrix.hpp"
-#include <string>
+#include <string_view>
 
 namespace renderer::opengl {
     /**
@@ -47,9 +46,9 @@ namespace renderer::opengl {
          *
          * @note This function unbinds this pipeline after it is done.
          */
-        void setUniform(const std::string& name, float value) const noexcept {
+        void setUniform(std::string_view name, float value) const noexcept {
             bind();
-            glUniform1f(glGetUniformLocation(m_programId, name.c_str()), value);
+            glUniform1f(glGetUniformLocation(m_programId, name.data()), value);
             unBind();
         }
 
@@ -61,9 +60,23 @@ namespace renderer::opengl {
          *
          * @note This function unbinds this pipeline after it is done.
          */
-        void setUniform(const std::string& name, glm::mat4 value) const noexcept {
+        void setUniform(std::string_view name, glm::vec3 value) const noexcept {
             bind();
-            glUniformMatrix4fv(glGetUniformLocation(m_programId, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+            glUniform3fv(glGetUniformLocation(m_programId, name.data()), 1, glm::value_ptr(value));
+            unBind();
+        }
+
+        /**
+         * @brief Sets a uniform in the pipeline.
+         * 
+         * @param name The name of the uniform.
+         * @param value The value of the uniform.
+         *
+         * @note This function unbinds this pipeline after it is done.
+         */
+        void setUniform(std::string_view name, glm::mat4 value) const noexcept {
+            bind();
+            glUniformMatrix4fv(glGetUniformLocation(m_programId, name.data()), 1, GL_FALSE, glm::value_ptr(value));
             unBind();
         }
 

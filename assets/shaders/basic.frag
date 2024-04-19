@@ -1,11 +1,7 @@
 #version 460 core
 
-in vec2 textureCoords;
-
-out vec4 outColor;
-
-uniform float brightness;
+layout(location = 0) out vec4 outColor;
 
 void main() {
-    outColor = vec4(textureCoords, 0.0f, 1.0f) * brightness;
+    outColor = vec4(1.0f);
 }
